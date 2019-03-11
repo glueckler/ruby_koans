@@ -29,8 +29,39 @@ require File.expand_path(File.dirname(__FILE__) + '/neo')
 #
 # Your goal is to write the score method.
 
+def threes amount
+  amount.div 3
+end
+
+def remainder amount
+  (amount - (threes(amount) * 3)) % 3
+end
+
 def score(dice)
   # You need to write this method
+  return 0 if dice == []
+
+  score_map = Hash.new
+  dice.each do |number|
+    number_exists = score_map.key?(number)
+    score_map[number] = 0 unless number_exists
+    score_map[number] = score_map[number] += 1
+  end
+
+  score = 0
+  score_map.each do |number, amount|
+    case number
+    when 1
+      score += threes(amount) * 1000
+      score += remainder(amount) * 100
+    when 5
+      score += threes(amount) * 500
+      score += remainder(amount) * 50
+    else
+      score += threes(amount) * number * 100
+    end
+  end
+  score
 end
 
 class AboutScoringProject < Neo::Koan
